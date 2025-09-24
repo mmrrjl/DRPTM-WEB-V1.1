@@ -40,6 +40,7 @@ app.use((req, res, next) => {
 // Register API routes
 registerRoutes(app);
 
+// Error handling middleware
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   const status = err.status || err.statusCode || 500;
   const message = err.message || "Internal Server Error";
@@ -52,6 +53,12 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
 if (process.env.NODE_ENV === "production") {
   serveStatic(app);
 }
+
+// Handle root path
+app.get("/", (req, res) => {
+  const path = require("path");
+  res.sendFile(path.join(__dirname, "../dist/public/index.html"));
+});
 
 // Export the Express app for Vercel
 export default app;
