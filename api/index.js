@@ -3,6 +3,11 @@ const path = require("path");
 
 const app = express();
 
+// Debug logging
+console.log("API server starting...");
+console.log("__dirname:", __dirname);
+console.log("Static files path:", path.join(__dirname, "../dist/public"));
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -60,9 +65,50 @@ app.get("/api/sensor-readings/latest", (req, res) => {
 // Serve static files
 app.use(express.static(path.join(__dirname, "../dist/public")));
 
-// Handle all routes - serve the React app
+// Handle root path
+app.get("/", (req, res) => {
+  const indexPath = path.join(__dirname, "../dist/public/index.html");
+  console.log("Serving index.html from:", indexPath);
+
+  // Check if file exists
+  const fs = require("fs");
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    console.error("index.html not found at:", indexPath);
+    res.status(404).send(`
+      <html>
+        <body>
+          <h1>404 - Application Not Found</h1>
+          <p>index.html not found at: ${indexPath}</p>
+          <p>Please check if the build completed successfully.</p>
+        </body>
+      </html>
+    `);
+  }
+});
+
+// Handle all other routes - serve the React app (for client-side routing)
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../dist/public/index.html"));
+  const indexPath = path.join(__dirname, "../dist/public/index.html");
+  console.log("Serving index.html for route:", req.path);
+
+  // Check if file exists
+  const fs = require("fs");
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    console.error("index.html not found at:", indexPath);
+    res.status(404).send(`
+      <html>
+        <body>
+          <h1>404 - Application Not Found</h1>
+          <p>index.html not found at: ${indexPath}</p>
+          <p>Please check if the build completed successfully.</p>
+        </body>
+      </html>
+    `);
+  }
 });
 
 module.exports = app;
