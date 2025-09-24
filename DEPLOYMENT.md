@@ -9,38 +9,46 @@ Aplikasi Anda mengalami display blank di Vercel karena beberapa masalah konfigur
 3. **Missing title di HTML**
 4. **Query client configuration yang terlalu strict**
 5. **Tidak ada error boundary untuk menangani error**
+6. **Function runtime error di Vercel**
+7. **Server configuration tidak sesuai dengan Vercel serverless**
 
 ## Perubahan yang Dilakukan
 
 ### 1. Konfigurasi Vercel (`vercel.json`)
 
 - Diperbaiki routing untuk static files
-- Menggunakan `functions` instead of `builds` untuk serverless functions
+- Menggunakan struktur yang lebih sederhana untuk menghindari runtime error
 - Path routing disesuaikan dengan output Vite
 
-### 2. HTML Template (`client/index.html`)
+### 2. Server Configuration (`api/index.ts`)
+
+- Dibuat file API entry point yang sesuai dengan Vercel serverless
+- Diperbaiki host configuration untuk production
+- Export Express app untuk Vercel
+
+### 3. HTML Template (`client/index.html`)
 
 - Ditambahkan title untuk SEO dan debugging
 - Memastikan meta tags lengkap
 
-### 3. Query Client (`client/src/lib/queryClient.ts`)
+### 4. Query Client (`client/src/lib/queryClient.ts`)
 
 - Mengubah `staleTime` dari `Infinity` ke `30000` (30 detik)
 - Mengubah `retry` dari `false` ke `1` untuk retry otomatis
 - Ini mencegah aplikasi stuck saat ada network error
 
-### 4. Error Boundary (`client/src/App.tsx`)
+### 5. Error Boundary (`client/src/App.tsx`)
 
 - Ditambahkan `react-error-boundary` untuk menangani error
 - Menampilkan error message yang user-friendly
 - Tombol reload untuk recovery
 
-### 5. Loading State (`client/src/pages/dashboard.tsx`)
+### 6. Loading State (`client/src/pages/dashboard.tsx`)
 
 - Ditambahkan loading spinner saat data belum tersedia
 - Mencegah blank screen saat loading
 
-### 6. Vite Configuration (`vite.config.ts`)
+### 7. Vite Configuration (`vite.config.ts`)
 
 - Diperbaiki rollup options untuk build yang lebih stabil
 
