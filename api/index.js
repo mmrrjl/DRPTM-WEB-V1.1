@@ -22,23 +22,45 @@ app.use((req, res, next) => {
   }
 });
 
-// Import and register routes
-try {
-  const { registerRoutes } = require("../server/routes");
-  registerRoutes(app);
-} catch (error) {
-  console.error("Error loading routes:", error);
-}
+// Basic API routes
+app.get("/api/test", (req, res) => {
+  res.json({ message: "API is working!", timestamp: new Date().toISOString() });
+});
+
+app.get("/api/system-status", (req, res) => {
+  res.json({
+    connectionStatus: "connected",
+    lastUpdate: new Date().toISOString(),
+    version: "1.0.0",
+  });
+});
+
+app.get("/api/sensor-readings", (req, res) => {
+  res.json([
+    {
+      id: 1,
+      timestamp: new Date().toISOString(),
+      temperature: 24.5,
+      ph: 6.2,
+      tdsLevel: 350,
+    },
+  ]);
+});
+
+app.get("/api/sensor-readings/latest", (req, res) => {
+  res.json({
+    id: 1,
+    timestamp: new Date().toISOString(),
+    temperature: 24.5,
+    ph: 6.2,
+    tdsLevel: 350,
+  });
+});
 
 // Serve static files
 app.use(express.static(path.join(__dirname, "../dist/public")));
 
-// Handle root path - serve the React app
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../dist/public/index.html"));
-});
-
-// Handle all other routes - serve the React app (for client-side routing)
+// Handle all routes - serve the React app
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../dist/public/index.html"));
 });
