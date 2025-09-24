@@ -58,6 +58,23 @@ export default function Dashboard() {
   const getPhStatus = (ph: number) => getOptimalityStatus(ph, 5.5, 6.5);
   const getTdsLevelStatus = (tds: number) => getOptimalityStatus(tds, 300, 500);
 
+  // Show loading state if no data is available
+  if (readingsLoading && sensorReadings.length === 0) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <h2 className="text-xl font-semibold text-slate-900 mb-2">
+            Loading HydroMonitor
+          </h2>
+          <p className="text-slate-600">
+            Please wait while we load your data...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
@@ -161,7 +178,10 @@ export default function Dashboard() {
         <div className="space-y-6 mb-8">
           {/* Individual Charts Grid */}
           <div className="flex flex-col gap-6">
-            <TemperatureChart data={sensorReadings} isLoading={readingsLoading} />
+            <TemperatureChart
+              data={sensorReadings}
+              isLoading={readingsLoading}
+            />
             <PHChart data={sensorReadings} isLoading={readingsLoading} />
             <TDSChart data={sensorReadings} isLoading={readingsLoading} />
           </div>
@@ -172,8 +192,7 @@ export default function Dashboard() {
             <SystemInfo systemStatus={systemStatus} />
           </div>
         </div>
-        </main>
-
+      </main>
 
       {/* Footer */}
       <footer className="bg-white border-t border-slate-200 mt-12">
