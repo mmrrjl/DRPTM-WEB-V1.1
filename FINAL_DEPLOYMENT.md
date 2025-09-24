@@ -6,12 +6,13 @@
 2. **404 Error** - Dibuat routing yang benar untuk static files dan API
 3. **Import Issues** - Menggunakan inline API routes untuk menghindari masalah import
 4. **Build Configuration** - Disederhanakan konfigurasi Vercel
+5. **File Conflict Error** - Dihapus `api/index.ts` yang konflik dengan `api/index.js`
 
 ## 📁 Struktur File Final
 
 ```
 ├── api/
-│   ├── index.js          # Serverless function (CommonJS)
+│   ├── index.js          # Serverless function (CommonJS) - ONLY FILE
 │   └── package.json      # Dependencies untuk API
 ├── dist/
 │   └── public/           # Static files (HTML, CSS, JS)
